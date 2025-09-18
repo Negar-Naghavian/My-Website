@@ -1,0 +1,106 @@
+/* style.css — polished Academic CV theme (same as before, tuned for your content) */
+:root{
+  --bg:#0f1724;
+  --card:#0f1620cc;
+  --glass: rgba(255,255,255,0.04);
+  --accent: linear-gradient(90deg,#7c3aed,#06b6d4);
+  --muted: #9aa6b2;
+  --glass-border: rgba(255,255,255,0.06);
+  --radius: 14px;
+  --max-width: 1100px;
+  --ease: cubic-bezier(.2,.9,.3,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:#e6eef6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+
+#bg-canvas{ position:fixed; inset:0; z-index:0; display:block; width:100%; height:100%; }
+
+/* Container */
+.container{ width: min(94%, var(--max-width)); margin: 0 auto; position:relative; z-index:2; }
+
+/* Header */
+.site-header{
+  padding:22px 0 10px;
+  backdrop-filter: blur(6px) saturate(1.05);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  position:sticky;
+  top:0;
+  z-index:6;
+}
+.header-inner{ display:flex; gap:16px; align-items:center; justify-content:space-between; }
+
+/* Profile */
+.profile{ display:flex; gap:16px; align-items:center; }
+.avatar{ width:88px; height:88px; border-radius:16px; object-fit:cover; border: 1px solid var(--glass-border); box-shadow: 0 6px 20px rgba(2,6,23,0.7); transition: transform 350ms var(--ease); }
+.name{ margin:0; font-size:1.35rem; letter-spacing:-0.5px; }
+.title{ margin:4px 0 0; color:var(--muted); font-size:0.95rem; }
+.meta{ margin-top:8px; color:var(--muted); font-size:0.85rem; }
+.meta a{ color:inherit; text-decoration:none; opacity:0.95; }
+.meta span{ opacity:0.5; margin:0 8px; }
+
+/* Nav */
+.top-nav a{ color:var(--muted); text-decoration:none; margin-left:14px; font-weight:600; font-size:0.95rem; transition: color 220ms var(--ease); }
+.top-nav a:hover{ color:#fff }
+
+/* Main */
+.main-content{ padding:34px 0 80px; }
+
+/* Panels */
+.panel{ margin-bottom:22px; padding:22px; border-radius:var(--radius); background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid var(--glass-border); box-shadow: 0 8px 30px rgba(2,6,23,0.6); transition: transform 600ms var(--ease), opacity 600ms var(--ease); transform-origin: center; }
+
+/* Cards & grids */
+.cards{ display:flex; gap:16px; margin-top:12px; flex-wrap:wrap }
+.card{ flex:1 1 260px; min-width:220px; padding:14px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.025); }
+.research-grid{ display:flex; gap:14px; margin-top:12px; flex-wrap:wrap }
+.research-card{ flex:1 1 420px; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.03) }
+.project-card{ flex:1 1 300px; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.03) }
+
+/* Muted lists */
+.muted-list{ color:var(--muted); margin:0.5rem 0 0 1rem; line-height:1.55; }
+
+/* CTA & buttons */
+.cta-row{ margin-top:12px; display:flex; gap:12px; flex-wrap:wrap }
+.btn{ display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px; text-decoration:none; color:#071126; background:var(--accent); font-weight:700; transform:translateY(0); transition: transform 220ms var(--ease), box-shadow 220ms var(--ease); box-shadow: 0 8px 20px rgba(12,18,32,0.6); }
+.btn:hover{ transform:translateY(-4px) }
+.btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.05); }
+
+/* Footer */
+.site-footer{ padding:24px 0 64px; color:var(--muted) }
+
+/* Reveal animations */
+.reveal{ opacity:0; transform: translateY(12px) scale(0.995) }
+.reveal.visible{ opacity:1; transform: translateY(0) scale(1); transition: opacity 600ms var(--ease), transform 600ms var(--ease) }
+
+/* Tilt */
+.tilt{ will-change: transform; transition: transform 220ms var(--ease), box-shadow 220ms var(--ease); }
+.tilt:hover{ box-shadow: 0 18px 40px rgba(2,6,23,0.65) }
+
+/* Responsive */
+@media (max-width:880px){
+  .header-inner{ flex-direction:column; align-items:flex-start; gap:10px }
+  .top-nav{ width:100%; display:flex; gap:12px; overflow:auto; }
+  .avatar{ width:72px; height:72px }
+  .cards{ flex-direction:column }
+  .research-grid{ flex-direction:column }
+}
+
+/* small decorative accent */
+.name::after{ content:""; display:block; height:6px; width:84px; margin-top:10px; border-radius:6px; background:linear-gradient(90deg,#7c3aed,#06b6d4); opacity:0.95; }
+
+/* small focus states for accessibility */
+a:focus, button:focus { outline: 3px solid rgba(125,100,255,0.14); outline-offset: 3px; }
+
+/* Misc */
+.muted{ color:var(--muted); font-size:0.9rem; }
+
+/* End of style.css */
