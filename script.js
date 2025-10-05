@@ -2,8 +2,57 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  // --- THEME SETUP (default: dark) ---
+  const THEME_KEY = 'nn_theme';
+  const cfg = {
+    count: 100,
+    maxRadius: 2.6,
+    connectionDist: 120,
+    speed: 0.35,
+    bgHue: 210,
+    bgPalette: 'dark',
+    connectionAlpha: 0.11,
+    dotAlphaMin: 0.42
+  };
+
+  function getStoredTheme() { return localStorage.getItem(THEME_KEY); }
+  function setStoredTheme(t) { localStorage.setItem(THEME_KEY, t); }
+
+  function applyTheme(theme) {
+    // theme: 'dark' | 'light'
+    document.body.setAttribute('data-theme', theme);
+    if (theme === 'light') {
+      cfg.bgPalette = 'light';
+      cfg.connectionAlpha = 0.13;
+      cfg.dotAlphaMin = 0.35;
+      cfg.bgHue = 265;   // purple-ish
+      cfg.maxRadius = 2.8;
+    } else {
+      cfg.bgPalette = 'dark';
+      cfg.connectionAlpha = 0.11;
+      cfg.dotAlphaMin = 0.42;
+      cfg.bgHue = 210;
+      cfg.maxRadius = 2.6;
+    }
+  }
+
+  // Initialize theme (persisted or default to dark)
+  applyTheme(getStoredTheme() || 'dark');
+
   // Set year in footer
-  document.getElementById('year').textContent = new Date().getFullYear();
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Theme toggle button
+  const toggleBtn = document.getElementById('theme-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const current = document.body.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      setStoredTheme(next);
+    });
+  }
 
   // Intersection reveal
   const revealEls = $$('.reveal');
@@ -47,7 +96,6 @@
   const ctx = canvas.getContext('2d');
   let DPR = Math.max(1, window.devicePixelRatio || 1);
 
-  const cfg = { count: 100, maxRadius: 2.6, connectionDist: 120, speed: 0.35, bgHue: 210 };
   let particles = [];
   let mouse = { x: null, y: null, lastMove: 0 };
 
@@ -130,18 +178,44 @@
   function draw() {
     const w = canvas.width / DPR;
     const h = canvas.height / DPR;
-    const g = ctx.createLinearGradient(0, 0, w, h);
-    g.addColorStop(0, 'rgba(6,11,22,0.46)');
-    g.addColorStop(1, 'rgba(2,6,23,0.72)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
 
-    const rg = ctx.createRadialGradient(w * 0.15, h * 0.1, 0, w * 0.25, h * 0.2, Math.max(w,h));
-    rg.addColorStop(0, 'rgba(124,58,237,0.03)');
-    rg.addColorStop(1, 'rgba(6,182,212,0)');
-    ctx.fillStyle = rg;
-    ctx.fillRect(0, 0, w, h);
+    // Background gradient differs by theme
+    if (cfg.bgPalette === 'light') {
+      // Soft paper with lavender wash
+      const g = ctx.createLinearGradient(0, 0, w, h);
+      g.addColorStop(0, 'rgba(250,250,255,0.95)');
+      g.addColorStop(1, 'rgba(236,238,252,0.90)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
 
+      // Purple "hollows" / glows
+      const rg1 = ctx.createRadialGradient(w*0.2, h*0.18, 0, w*0.22, h*0.2, Math.max(w,h)*0.9);
+      rg1.addColorStop(0, 'rgba(167,139,250,0.13)');
+      rg1.addColorStop(1, 'rgba(167,139,250,0)');
+      ctx.fillStyle = rg1;
+      ctx.fillRect(0, 0, w, h);
+
+      const rg2 = ctx.createRadialGradient(w*0.8, h*0.75, 0, w*0.78, h*0.72, Math.max(w,h)*0.7);
+      rg2.addColorStop(0, 'rgba(196,181,253,0.10)');
+      rg2.addColorStop(1, 'rgba(196,181,253,0)');
+      ctx.fillStyle = rg2;
+      ctx.fillRect(0, 0, w, h);
+    } else {
+      // Original dark background
+      const g = ctx.createLinearGradient(0, 0, w, h);
+      g.addColorStop(0, 'rgba(6,11,22,0.46)');
+      g.addColorStop(1, 'rgba(2,6,23,0.72)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+
+      const rg = ctx.createRadialGradient(w * 0.15, h * 0.1, 0, w * 0.25, h * 0.2, Math.max(w,h));
+      rg.addColorStop(0, 'rgba(124,58,237,0.03)');
+      rg.addColorStop(1, 'rgba(6,182,212,0)');
+      ctx.fillStyle = rg;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    // Connections
     ctx.lineWidth = 0.6;
     for (let i = 0; i < particles.length; i++) {
       const a = particles[i];
@@ -152,7 +226,11 @@
         const d2 = dx * dx + dy * dy;
         if (d2 < cfg.connectionDist * cfg.connectionDist) {
           const t = 1 - (Math.sqrt(d2) / cfg.connectionDist);
-          ctx.strokeStyle = `rgba(120,90,230,${0.11 * t})`;
+          if (cfg.bgPalette === 'light') {
+            ctx.strokeStyle = `rgba(124,58,237,${cfg.connectionAlpha * t})`;
+          } else {
+            ctx.strokeStyle = `rgba(120,90,230,${cfg.connectionAlpha * t})`;
+          }
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -161,18 +239,32 @@
       }
     }
 
+    // Particles with theme-aware glow
     for (let p of particles) {
       const r = p.r;
+
+      // outer glow
       ctx.beginPath();
       const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 6);
-      grad.addColorStop(0, `rgba(124,58,237,0.065)`);
-      grad.addColorStop(1, `rgba(6,182,212,0)`);
+      if (cfg.bgPalette === 'light') {
+        grad.addColorStop(0, `rgba(167,139,250,0.12)`);
+        grad.addColorStop(1, `rgba(167,139,250,0)`);
+      } else {
+        grad.addColorStop(0, `rgba(124,58,237,0.065)`);
+        grad.addColorStop(1, `rgba(6,182,212,0)`);
+      }
       ctx.fillStyle = grad;
       ctx.arc(p.x, p.y, r * 6, 0, Math.PI * 2);
       ctx.fill();
 
+      // core
       ctx.beginPath();
-      ctx.fillStyle = `rgba(255,255,255,${Math.max(0.42, p.r / cfg.maxRadius * 0.9)})`;
+      const coreAlpha = Math.max(cfg.dotAlphaMin, p.r / cfg.maxRadius * 0.9);
+      if (cfg.bgPalette === 'light') {
+        ctx.fillStyle = `rgba(70,45,140,${coreAlpha})`;
+      } else {
+        ctx.fillStyle = `rgba(255,255,255,${coreAlpha})`;
+      }
       ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
       ctx.fill();
     }
@@ -197,9 +289,11 @@
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (mq.matches) {
     // static background
-    // (stop active animation by clearing particles and drawing a static fill)
     particles = [];
-    ctx.fillStyle = 'rgba(5,10,18,1)';
+    const fill = document.body.getAttribute('data-theme') === 'light'
+      ? 'rgba(245,247,255,1)'
+      : 'rgba(5,10,18,1)';
+    ctx.fillStyle = fill;
     ctx.fillRect(0, 0, canvas.width / DPR, canvas.height / DPR);
   }
 

@@ -103,4 +103,61 @@ a:focus, button:focus { outline: 3px solid rgba(125,100,255,0.14); outline-offse
 /* Misc */
 .muted{ color:var(--muted); font-size:0.9rem; }
 
+/* ===== Light theme (activated via body[data-theme="light"]) ===== */
+body[data-theme="light"] {
+  --bg: #f7f7fb;
+  --card: #ffffffb8;
+  --glass: rgba(10, 10, 20, 0.04);
+  --glass-border: rgba(10, 10, 20, 0.08);
+  --muted: #5b6472;
+  --accent: linear-gradient(90deg, #7c3aed, #a78bfa); /* more purple-forward */
+  color: #0f172a;
+}
+
+body[data-theme="light"] .panel,
+body[data-theme="light"] .card,
+body[data-theme="light"] .research-card,
+body[data-theme="light"] .project-card {
+  box-shadow: 0 8px 26px rgba(16, 24, 40, 0.12);
+  border-color: var(--glass-border);
+}
+
+body[data-theme="light"] .top-nav a:hover { color: #111827; }
+body[data-theme="light"] .btn.ghost { color: #4b5563; border-color: var(--glass-border); }
+body[data-theme="light"] .muted { color: var(--muted); }
+body[data-theme="light"] .meta a{ color: inherit; opacity: 0.9; }
+
+/* Theme toggle button (with labels) */
+.theme-toggle{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:40px; border-radius:10px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: #e6eef6;
+  cursor:pointer;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s, color .2s;
+  margin-left: 10px;
+  gap: 8px; padding: 0 12px;
+}
+.theme-toggle:hover{ transform: translateY(-2px); box-shadow: 0 10px 22px rgba(2,6,23,0.35); }
+.theme-toggle .icon{ width:20px; height:20px; display:block; }
+.theme-toggle .icon-sun{ display:none; }
+.theme-toggle .theme-label{ font-weight:700; font-size:0.95rem; }
+.theme-toggle .label-dark{ display:none; } /* hidden by default (dark theme shows "Light mode") */
+
+body[data-theme="light"] .theme-toggle{
+  color: #3b3b45; background: #ffffffc9; box-shadow: 0 8px 20px rgba(16,24,40,.10);
+}
+body[data-theme="light"] .theme-toggle .icon-moon{ display:none; }
+body[data-theme="light"] .theme-toggle .icon-sun{ display:block; }
+body[data-theme="light"] .theme-toggle .label-light{ display:none; } /* in light theme, hide "Light mode" */
+body[data-theme="light"] .theme-toggle .label-dark{ display:inline; } /* show "Dark mode" */
+
+/* Mobile alignment for toggle */
+@media (max-width:880px){
+  .header-inner{ gap: 10px; }
+  .top-nav{ flex: 1; }
+  .theme-toggle{ margin-left: auto; }
+}
+
 /* End of style.css */
