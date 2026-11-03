@@ -251,7 +251,67 @@
         I enjoy trying new approaches to painting and learning how different materials can be used to express ideas. 
         Art is something I genuinely enjoy, and it has also made me more interested in the creative side of design.
       </p>
-        </section>
+        
+      <!-- Artwork gallery: images have no invented titles, and their proportions are preserved. -->
+      <div class="art-gallery-header">
+        <h3>Gallery</h3>
+        <p>Paintings and studies in different styles and media.</p>
+      </div>
+      <div class="art-gallery" aria-label="Personal artwork gallery">
+          <button class="art-card" type="button" data-full="artworks/full/art-01.webp" aria-label="View artwork 1 of 13">
+            <img src="artworks/thumbs/art-01.webp" alt="Watercolor scene of a lakeside walkway with glowing lamps" loading="eager" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-02.webp" aria-label="View artwork 2 of 13">
+            <img src="artworks/thumbs/art-02.webp" alt="Watercolor painting of a seated figure wearing a red top and blue jacket" loading="eager" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-03.webp" aria-label="View artwork 3 of 13">
+            <img src="artworks/thumbs/art-03.webp" alt="Vibrant painted portrait framed in pink and blue" loading="eager" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-04.webp" aria-label="View artwork 4 of 13">
+            <img src="artworks/thumbs/art-04.webp" alt="Geometric abstract painting in blue, yellow, gray, and black" loading="eager" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-05.webp" aria-label="View artwork 5 of 13">
+            <img src="artworks/thumbs/art-05.webp" alt="Expressive monochrome portrait in shades of gray" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-06.webp" aria-label="View artwork 6 of 13">
+            <img src="artworks/thumbs/art-06.webp" alt="Geometric abstract painting with black, gray, blue, white, and red shapes" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-07.webp" aria-label="View artwork 7 of 13">
+            <img src="artworks/thumbs/art-07.webp" alt="Abstract composition inspired by a stringed musical instrument" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-08.webp" aria-label="View artwork 8 of 13">
+            <img src="artworks/thumbs/art-08.webp" alt="Mixed-media abstract collage with blue and red geometric forms" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-09.webp" aria-label="View artwork 9 of 13">
+            <img src="artworks/thumbs/art-09.webp" alt="Stylized painting of a seated figure in a green top" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-10.webp" aria-label="View artwork 10 of 13">
+            <img src="artworks/thumbs/art-10.webp" alt="Expressive figurative painting with bright yellow and blue brushstrokes" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-11.webp" aria-label="View artwork 11 of 13">
+            <img src="artworks/thumbs/art-11.webp" alt="Surreal composition of faces and colorful geometric shapes" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-12.webp" aria-label="View artwork 12 of 13">
+            <img src="artworks/thumbs/art-12.webp" alt="Expressive painting in deep blue and violet with a round palette-like shape" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+          <button class="art-card" type="button" data-full="artworks/full/art-13.webp" aria-label="View artwork 13 of 13">
+            <img src="artworks/thumbs/art-13.webp" alt="Still-life painting with a glass sphere and purple-toned objects" loading="lazy" decoding="async" />
+            <span class="art-card-hint" aria-hidden="true">View <span>↗</span></span>
+          </button>
+      </div>
+    </section>
 
    
 <section id="contact" class="panel reveal contact-panel">
@@ -267,10 +327,21 @@
     </div>
   </footer>
 
+
+  <!-- Accessible artwork viewer: close with Escape, browse with arrow keys. -->
+  <dialog id="art-lightbox" class="art-lightbox" aria-label="Artwork viewer">
+    <div class="art-lightbox-inner">
+      <button type="button" id="art-close" class="art-lightbox-control art-close" aria-label="Close artwork viewer">×</button>
+      <button type="button" id="art-prev" class="art-lightbox-control art-prev" aria-label="Previous artwork">‹</button>
+      <img id="art-full-image" class="art-lightbox-image" alt="" />
+      <button type="button" id="art-next" class="art-lightbox-control art-next" aria-label="Next artwork">›</button>
+      <span id="art-counter" class="art-lightbox-counter" aria-live="polite"></span>
+    </div>
+  </dialog>
+
   <script src="script.js" defer></script>
 </body>
 </html>
-
 
 
 

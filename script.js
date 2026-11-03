@@ -15,8 +15,8 @@
     dotAlphaMin: 0.42
   };
 
-  function getStoredTheme() { return localStorage.getItem(THEME_KEY); }
-  function setStoredTheme(t) { localStorage.setItem(THEME_KEY, t); }
+  function getStoredTheme() { try { return localStorage.getItem(THEME_KEY); } catch { return null; } }
+  function setStoredTheme(t) { try { localStorage.setItem(THEME_KEY, t); } catch { /* storage unavailable */ } }
 
   function applyTheme(theme) {
     // theme: 'dark' | 'light'
@@ -301,5 +301,57 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') document.body.classList.add('show-focus');
   });
+
+
+  // Artwork gallery: a keyboard-accessible, title-free, full-screen lightbox.
+  const artButtons = $$('.art-card[data-full]');
+  const artDialog = $('#art-lightbox');
+  if (artButtons.length && artDialog && typeof artDialog.showModal === 'function') {
+    const fullImage = $('#art-full-image');
+    const counter = $('#art-counter');
+    const closeButton = $('#art-close');
+    const previousButton = $('#art-prev');
+    const nextButton = $('#art-next');
+    let currentArt = 0;
+    let triggerButton = null;
+
+    function showArtwork(index) {
+      currentArt = (index + artButtons.length) % artButtons.length;
+      const card = artButtons[currentArt];
+      const thumbnail = card.querySelector('img');
+      fullImage.src = card.dataset.full;
+      fullImage.alt = thumbnail ? thumbnail.alt : `Artwork ${currentArt + 1}`;
+      counter.textContent = `${String(currentArt + 1).padStart(2, '0')} / ${String(artButtons.length).padStart(2, '0')}`;
+    }
+
+    artButtons.forEach((card, index) => {
+      card.addEventListener('click', () => {
+        triggerButton = card;
+        showArtwork(index);
+        artDialog.showModal();
+        closeButton.focus();
+      });
+    });
+
+    closeButton.addEventListener('click', () => artDialog.close());
+    previousButton.addEventListener('click', () => showArtwork(currentArt - 1));
+    nextButton.addEventListener('click', () => showArtwork(currentArt + 1));
+
+    // A click outside the viewer closes it; the image itself does not.
+    artDialog.addEventListener('click', (event) => {
+      if (event.target === artDialog) artDialog.close();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!artDialog.open) return;
+      if (event.key === 'ArrowRight') { event.preventDefault(); showArtwork(currentArt + 1); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); showArtwork(currentArt - 1); }
+    });
+
+    artDialog.addEventListener('close', () => {
+      fullImage.removeAttribute('src');
+      if (triggerButton) triggerButton.focus();
+    });
+  }
 
 })();
